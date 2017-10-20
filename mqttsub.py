@@ -4,7 +4,7 @@ import paho.mqtt.client as mqtt
 
 client = None
 mqtt_looping = False
-TOPIC_ROOT = "hello"
+TOPIC_ROOT = "test"
 
 def status_reading():
     while True:
@@ -31,16 +31,16 @@ def on_message(mq, userdata, msg):
 
     chn = msg.topic.rpartition('/')[-1]
     if chn == 'command':
-        print ("Should invoke gate %s function" % msg.payload)
+        print ("receive %s" % msg.payload)
 
-        client.publish(TOPIC_ROOT + '/status', "opening", qos=0)
-        time.sleep(0.5)
-        client.publish(TOPIC_ROOT + '/status', "opened", qos=0)
+        # client.publish(TOPIC_ROOT + '/response', "computing", qos=0)
+        # time.sleep(0.5)
+        client.publish(TOPIC_ROOT + '/response', "hello world", qos=0)
 
 
 def mqtt_client_thread():
     global client, mqtt_looping
-    client_id = "" # If broker asks client ID.
+    client_id = "KMDRIOD" # If broker asks client ID.
     client = mqtt.Client(client_id=client_id)
 
     # If broker asks user/password.
