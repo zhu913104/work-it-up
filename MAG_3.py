@@ -82,8 +82,7 @@ class GA(object):
         pop = self.pop
         fitness_index = np.argsort(fitness)
         for x in range(Sub_pop_size):
-            pop[x - 1][fitness_index[x - 1][:migration_number]], pop[x][fitness_index[x][-migration_number:]] = pop[x][fitness_index[x][-migration_number:]], \
-                                                                                  pop[x - 1][fitness_index[x - 1][:migration_number]]
+            pop[x - 1][fitness_index[x - 1][:migration_number]] = pop[x][fitness_index[x][-migration_number:]]
         self.pop = pop
 
 def translateDNA( DNA, city_position):  # get cities' coord in order
@@ -103,7 +102,7 @@ class TravelSalesPerson(object):
     def plotting(self, lx, ly, total_d):
         c_num = len(self.city_position)
         plt.cla()
-        plt.title('MGA_2')
+        plt.title('MGA_3')
         colour = np.linspace(10,20,c_num)
         plt.scatter(self.city_position[:, 0].T, self.city_position[:, 1].T, s=100, c=colour)
         plt.plot(lx.T, ly.T, 'k--')
