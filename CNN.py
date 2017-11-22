@@ -141,7 +141,7 @@ xx.compile(loss="categorical_crossentropy",optimizer='adam',metrics=['accuracy']
 # In[32]:
 
 
-train_history=xx.fit(x=x_train4D_NL,y=y_train_OH,validation_split=0.2,epochs=100,batch_size=300,verbose=2)
+train_history=xx.fit(x=x_train4D_NL,y=y_train_OH,validation_split=0.2,epochs=10,batch_size=300,verbose=2)
 
 
 # In[33]:
