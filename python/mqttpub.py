@@ -1,25 +1,17 @@
-# coding: utf-8
-import sys, os, time
+import paho.mqtt.publish as publish
 
-
-import paho.mqtt.client as mqtt
-
-# If broker asks client ID.
-client_id = "8787"
-
-client = mqtt.Client(client_id=client_id)
+# publish a message then disconnect.
+host = "localhost"
+topic = "tw/rocksaying/command"
+payload = "open"
 
 # If broker asks user/password.
-user = ""
-password = ""
-client.username_pw_set(user, password)
 
-client.connect("localhost")
 
-topic = "hello"
-payload = "hello mqtt"
+# If broker asks client ID.
 
-for i in range(10):
-    client.publish(topic, "%s - %d" % (payload, i))
-    time.sleep(0.01)
-    # 當 qos = 0, 若訊息間隔太短，就可能會漏發訊息。這是正常現象。
+
+publish.single(topic, payload, qos=1, hostname=host)
+
+#publish.single(topic, payload, qos=1, host=host,
+#    auth=auth, client_id=client_id)
