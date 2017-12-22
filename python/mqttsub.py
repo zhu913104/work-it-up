@@ -1,11 +1,17 @@
 # coding: utf-8
 import sys, os, time, signal
+import threading
 import paho.mqtt.client as mqtt
 
 client = None
 mqtt_looping = False
-TOPIC_ROOT = "test"
+reading_thread = None
 
+TOPIC_ROOT = "tw/rocksaying"
+
+def on_connect(mq, userdata, rc, _):
+    # subscribe when connected.
+    mq.subscribe(TOPIC_ROOT + '/#')
 def status_reading():
     while True:
         #status = gate.read()
@@ -18,12 +24,6 @@ def status_reading():
             print ("quit status reading thread")
             return
 
-
-
-def on_connect(mq, userdata, rc, _):
-    # subscribe when connected.
-    mq.subscribe(TOPIC_ROOT + '/#')
-
 def on_message(mq, userdata, msg):
     print ("topic: %s" % msg.topic)
     print ("payload: %s" % msg.payload)
@@ -31,16 +31,14 @@ def on_message(mq, userdata, msg):
 
     chn = msg.topic.rpartition('/')[-1]
     if chn == 'command':
-        print ("receive %s" % msg.payload)
-
-        # client.publish(TOPIC_ROOT + '/response', "computing", qos=0)
-        # time.sleep(0.5)
-        client.publish(TOPIC_ROOT + '/response', "hello world", qos=0)
-
-
+        print ("Should invoke gate %s function" % msg.payload)
+        # 假裝開門狀態
+        client.publish(TOPIC_ROOT + '/status', "opening", qos=1)
+        time.sleep(0.5)
+        client.publish(TOPIC_ROOT + '/status', "opened", qos=1)
 def mqtt_client_thread():
     global client, mqtt_looping
-    client_id = "KMDRIOD" # If broker asks client ID.
+    client_id = "" # If broker asks client ID.
     client = mqtt.Client(client_id=client_id)
 
     # If broker asks user/password.
@@ -58,12 +56,12 @@ def mqtt_client_thread():
 
     mqtt_looping = True
     print ("Looping...")
-
+    reading_thread = threading.Thread(target=status_reading)
+    reading_thread.start()
     #mqtt_loop.loop_forever()
     cnt = 0
     while mqtt_looping:
         client.loop()
-
         cnt += 1
         if cnt > 20:
             try:
@@ -71,7 +69,6 @@ def mqtt_client_thread():
             except:
                 time.sleep(1)
             cnt = 0
-
     print ("quit mqtt thread")
     client.disconnect()
 
@@ -80,6 +77,10 @@ def stop_all(*args):
     mqtt_looping = False
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGTERM, stop_all)
+    signal.signal(signal.SIGINT, stop_all)
+    signal.signal(signal.SIGINT,  stop_all)  # Ctrl-C
+
     mqtt_client_thread()
     reading_thread.join()
     print ("exit program")
