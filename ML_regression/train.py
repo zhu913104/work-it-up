@@ -41,6 +41,8 @@ w = np.zeros((x.shape[1]))
 lr=10
 s_gra=0
 repeat=10000
+cost_=np.load("cost_others.npy")
+cost_train=0
 h = x.dot(w)
 print(y.shape,h.shape)
 for _ in range(repeat):
@@ -52,6 +54,9 @@ for _ in range(repeat):
     s_gra +=gra**2
     w = w - (lr/np.sqrt(s_gra))*gra
     print("interation:{},cost:{}".format(_,cost_a))
+    cost_train=cost_a
 
+cost_=np.hstack( (cost_,cost_train))
 # save model
 np.save('model.npy',w)
+np.save('cost_others.npy',cost_)

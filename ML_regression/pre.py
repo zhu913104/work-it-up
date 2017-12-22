@@ -12,7 +12,7 @@ text.close()
 ansdata=np.array(ansdata)
 
 
-text = open("data/preidct.csv","r")
+text = open("data/prediction.csv","r")
 ans=csv.reader(text)
 
 predata=[]
@@ -21,5 +21,8 @@ for i,data in enumerate(ans):
         predata.append(float(data[1]))
 text.close()
 predata=np.array(predata)
-
+pre = np.load('pre.npy')
+pre=np.hstack((pre,np.sqrt(np.mean((ansdata-predata)**2))))
 print(np.sqrt(np.mean((ansdata-predata)**2)))
+
+np.save("pre.npy",pre)

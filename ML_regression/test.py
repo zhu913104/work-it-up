@@ -18,6 +18,8 @@ x_test=np.array(x_test)
 
 x_test = np.concatenate((np.ones((x_test.shape[0],1)),x_test),axis=1)
 
+print(x_test.shape)
+
 w = np.load('model.npy')
 
 ans=[]
