@@ -1,6 +1,9 @@
 import serial
+import time
+from msvcrt import getch
 
-ser = serial.Serial('COM4')  # open COM4 port
-while ser.is_open:
-    y=ser.read(8)
-    print(y.decode("utf-8"))
+ser=serial.Serial("COM3",9600,timeout=10)
+while True:
+    x = input()
+    if (x):
+        ser.write(x.encode())
