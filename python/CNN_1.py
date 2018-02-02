@@ -141,7 +141,7 @@ xx.compile(loss="categorical_crossentropy",optimizer='adam',metrics=['accuracy']
 # In[32]:
 
 
-train_history=xx.fit(x=x_train4D_NL,y=y_train_OH,validation_split=0.2,epochs=20,batch_size=300,verbose=2)
+train_history=xx.fit(x=x_train4D_NL,y=y_train_OH,validation_split=0.2,epochs=10,batch_size=300,verbose=2)
 
 
 # In[33]:
@@ -162,7 +162,6 @@ def show_train_history(train_history,train,validation):
 
 show_train_history(train_history,'acc','val_acc')
 
-
 # In[35]:
 
 
@@ -173,46 +172,8 @@ show_train_history(train_history,'loss','val_loss')
 
 
 scroes = xx.evaluate(x_test4D_NL,y_test_OH)
+print("test ACC:",scroes[1])
 
 
-# In[37]:
-
-
-prediction = xx.predict_classes(x_test4D_NL)
-
-
-# In[38]:
-
-
-prediction
-
-
-# In[39]:
-
-
-plot_image_lables_prediction(x_test,y_test,prediction=prediction,idx=0)
-
-
-# In[40]:
-
-
-pd.crosstab(y_test,prediction,rownames=["lable"],colnames=["predict"])
-
-
-# In[41]:
-
-
-df = pd.DataFrame({'lable':y_test,"prediction":prediction})
-
-
-# In[44]:
-
-
-df[(df.lable==2)&(df.prediction==7)]
-
-
-# In[46]:
-
-
-plot_image_lables_prediction(x_test,y_test,prediction,idx=4176,num=1)
-
+scroes = xx.evaluate(x_train4D_NL,y_train_OH)
+print("train ACC:",scroes[1])
