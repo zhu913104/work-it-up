@@ -11,8 +11,8 @@ while (ser.is_open):
     x=input()
     ser.write(x.encode())
     if(ser.in_waiting>0):
-        time.sleep(0.1)
-        data = ser.readline()
-        print(data.decode())
+        data = str(ser.read(200))
+        data = data.split('\\r\\n')
+        print(data[20])
         ser.flushInput()
         ser.flushOutput()
