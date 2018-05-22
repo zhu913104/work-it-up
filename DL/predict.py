@@ -20,17 +20,17 @@ model = VGG16()
 
 model = VGG16()
 #print(model.summary())
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True,help="path to the input image")
-args = vars(ap.parse_args())
+# ap = argparse.ArgumentParser()
+# ap.add_argument("-i", "--image", required=True,help="path to the input image")
+# args = vars(ap.parse_args())
 
 
 # In[21]:
 
 
 # load an image from file
-img_file='qZqZo6SVk6ecq6Q.jpg'
-image = load_img(args["image"], target_size=(224, 224))
+img_file='img/4198529.jpg'
+image = load_img(img_file, target_size=(224, 224))
 # convert the image pixels to a numpy array
 image = img_to_array(image)
 # reshape data for the model
@@ -45,7 +45,7 @@ label = decode_predictions(yhat)
 label = label[0][0]
 # print the classification
 print('%s (%.2f%%)' % (label[1], label[2]*100))
-orig = cv2.imread(args["image"])
+orig = cv2.imread(img_file)
 cv2.putText(orig, "{}: {} %".format(label[1],label[2]), (10, 30),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 cv2.imshow("Classification", orig)
 cv2.waitKey(0)

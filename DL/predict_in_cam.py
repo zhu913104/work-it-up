@@ -9,8 +9,7 @@ from keras.applications.vgg16 import decode_predictions
 from keras.preprocessing.image import img_to_array
 from keras.preprocessing.image import load_img
 from keras.applications.vgg16 import preprocess_input
-import numpy as np
-import argparse
+
 import cv2
 model = VGG16()
 
