@@ -4,17 +4,16 @@ import numpy as np
 class tic_tac_toe(object):
     def __init__(self,gamemode="man2man"):
         self.status=[" ", " ", " ", " ", " ", " ", " ", " ", " "]
-        self.player = ["O", 'X']
-        self.turn=""
+        self.player = ['1','2']
+        self.turn=0
         self.round=0
         self.gamemode=gamemode
-        self.actions=['1','2','3','4','5','6','7','8','9']
+        self.actions=['1','2','3','4','5','6','7','8','0']
         self.done = False
 
     def reset(self):
         self.status = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
-        self.player = ["O", 'X']
-        self.turn=""
+        self.turn=0
         self.round=0
         self.done = False
         return self.status
@@ -32,28 +31,46 @@ class tic_tac_toe(object):
     def render(self):
         os.system("cls")
         print("")
+        tran=self.status.copy()
+        for i in range(len(tran)) :
+            if tran[i] == '1':
+                tran[i]= 'O'
+            elif tran[i]=='2':
+                tran[i]= 'X'
         for i in range(3):
-            print('  ' + self.status[i*3] + "|" + self.status[i*3+1] + '|' + self.status[i*3+2])
+            print('  ' + tran[i*3] + "|" + tran[i*3+1] + '|' + tran[i*3+2])
 
     def update(self,action):
         self.turn=self.player[self.round%2]
         action = int(action)
+        self.leg=False
+        r=0
         if self.status[action] == " ":
             self.status[action] = self.turn
             self.round+=1
-            self.done=True
-            if self.checkgame():
+            self.leg = True
+            if self.checkgame() and self.turn=="1":
                 r=10
-            else:
+                self.done = True
+                self.leg=False
+
+            elif self.checkgame() and self.turn=="2":
                 r=-10
-            return self.status ,r,self.done,True
+                self.done = True
+                self.leg = False
+
+            return self.status ,r,self.done, self.leg
         else:
-            return self.status ,0,self.done,True
+            if  " "not in self.status:
+                self.done = True
+                self.leg = True
+            return self.status ,r,self.done, self.leg
 
 
 
     def main(self):
         self.render()
+        print(self.status)
         if self.gamemode=='man2ran':
             if (self.round%2==0):
                 action=input()

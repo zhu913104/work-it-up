@@ -3,46 +3,56 @@ from RL import QLearningTable
 
 
 env = tic_tac_toe()
-RL = QLearningTable(actions=env.actions)
+RL_1 = QLearningTable(actions=env.actions)
+RL_2 = QLearningTable(actions=env.actions)
 
-
-def main(env,RL):
-    step = 0
-    for episode in range(300):
+def main(env,RL_1,RL_2):
+    while True:
         # initial observation
-        observation = env.reset()
+        observation_1 = env.reset()
+        observation_2 = observation_1.copy()
 
         while True:
             # fresh env
             env.render()
-
+            for i in range(len(observation_2)):
+                if observation_2[i]=='1':
+                    observation_2[i] = '2'
+                elif observation_2[i]=='2':
+                    observation_2[i] = '1'
             # RL choose action based on observation
-            action = RL.choose_action(observation)
+            action_1 = str(RL_1.choose_action(str(observation_1)))
+            action_2 = str(RL_2.choose_action(str(observation_2)))
 
             # RL take action and get next observation and reward
-            observation_, reward, done,legal = env.update(action)
-            while not legal:
-                action = RL.choose_action(observation,legal)
-                observation_, reward, done, legal = env.update(action)
+            observation_1_, reward_1, done_1,legal_1 = env.update(action_1)
 
-            RL.store_transition(observation, action, reward, observation_)
+            observation_2_, reward_2, done_2, legal_2 = env.update(action_2)
+
+            while not legal_1 and reward_1==0:
+                action_1 = RL_1.choose_action(str(observation_1),legal_1)
+                observation_1_, reward_1, done_1, legal_1 = env.update(action_1)
+
+            while not legal_2 and reward_2==0:
+                action_2 = RL_2.choose_action(str(observation_2),legal_2)
+                observation_2_, reward_2, done_2, legal_2 = env.update(action_2)
 
             # RL learn from this transition
-            RL.learn(str(observation), action, reward, str(observation_))
-
+            RL_1.learn(str(observation_1), action_1, reward_1, str(observation_1_),done_1)
+            RL_2.learn(str(observation_2), action_2, reward_2, str(observation_2_),done_2)
             # swap observation
-            observation = observation_
-
+            observation_1 = observation_1_
+            observation_2 = observation_2_
             # break while loop when end of this episode
-            if done:
+            if done_1 or done_2 or env.round==9:
+
                 break
-            step += 1
+
 
     # end of game
-    print('game over')
-    env.destroy()
+
 
 
 if __name__ == "__main__":
     # maze game
-    main()
+    main(env,RL_1,RL_2)

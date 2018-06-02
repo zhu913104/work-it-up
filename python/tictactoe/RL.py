@@ -15,12 +15,13 @@ class QLearningTable:
         self.lr = learning_rate
         self.gamma = reward_decay
         self.epsilon = e_greedy
-        self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+        # self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+        self.q_table = pd.read_csv("ccc.csv",index_col="Unnamed: 0")
 
     def choose_action(self, observation,legal=True):
         self.check_state_exist(observation)
         # action selection
-        if (np.random.uniform() < self.epsilo) and legal:
+        if (np.random.uniform() < self.epsilon) and legal:
             # choose best action
             state_action = self.q_table.loc[observation, :]
             state_action = state_action.reindex(np.random.permutation(state_action.index))     # some actions have same value
@@ -30,14 +31,15 @@ class QLearningTable:
             action = np.random.choice(self.actions)
         return action
 
-    def learn(self, s, a, r, s_):
+    def learn(self, s, a, r, s_,done):
         self.check_state_exist(s_)
         q_predict = self.q_table.loc[s, a]
-        if s_ != 'terminal':
+        if done != True:
             q_target = r + self.gamma * self.q_table.loc[s_, :].max()  # next state is not terminal
         else:
             q_target = r  # next state is terminal
         self.q_table.loc[s, a] += self.lr * (q_target - q_predict)  # update
+        self.q_table.to_csv("ccc.csv")
 
     def check_state_exist(self, state):
         if state not in self.q_table.index:
