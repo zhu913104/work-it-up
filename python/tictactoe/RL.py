@@ -10,13 +10,17 @@ import pandas as pd
 
 
 class QLearningTable:
-    def __init__(self, actions, learning_rate=0.01, reward_decay=0.9, e_greedy=0.9):
+    def __init__(self, actions, file,learning_rate=0.01, reward_decay=0.9, e_greedy=0.9):
         self.actions = actions  # a list
         self.lr = learning_rate
         self.gamma = reward_decay
         self.epsilon = e_greedy
+        self.file= file
         # self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
-        self.q_table = pd.read_csv("ccc.csv",index_col="Unnamed: 0")
+        try:
+            self.q_table = pd.read_csv(self.file,index_col="Unnamed: 0")
+        except:
+            self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
 
     def choose_action(self, observation,legal=True):
         self.check_state_exist(observation)
@@ -39,7 +43,7 @@ class QLearningTable:
         else:
             q_target = r  # next state is terminal
         self.q_table.loc[s, a] += self.lr * (q_target - q_predict)  # update
-        self.q_table.to_csv("ccc.csv")
+        self.q_table.to_csv("_"+self.file)
 
     def check_state_exist(self, state):
         if state not in self.q_table.index:

@@ -2,12 +2,11 @@ import os
 import time
 import numpy as np
 class tic_tac_toe(object):
-    def __init__(self,gamemode="man2man"):
+    def __init__(self):
         self.status=[" ", " ", " ", " ", " ", " ", " ", " ", " "]
         self.player = ['1','2']
         self.turn=0
         self.round=0
-        self.gamemode=gamemode
         self.actions=['1','2','3','4','5','6','7','8','0']
         self.done = False
 
@@ -40,7 +39,7 @@ class tic_tac_toe(object):
         for i in range(3):
             print('  ' + tran[i*3] + "|" + tran[i*3+1] + '|' + tran[i*3+2])
 
-    def update(self,action,status):
+    def step(self,action,status):
         self.turn=self.player[self.round%2]
         action = int(action)
         self.leg=False
@@ -50,15 +49,10 @@ class tic_tac_toe(object):
             status_[action] = self.turn
             self.round+=1
             self.leg = True
-            if self.checkgame(status_) and self.turn=="1":
+            if self.checkgame(status_) :
                 r=10
                 self.done = True
-                self.leg=False
-
-            elif self.checkgame(status_) and self.turn=="2":
-                r=-10
-                self.done = True
-                self.leg = False
+                self.leg= True
 
             return status_ ,r,self.done, self.leg
         else:
@@ -68,46 +62,45 @@ class tic_tac_toe(object):
             return status ,r,self.done, self.leg
 
 
-
-    def main(self):
-        self.render()
-        print(self.status)
-        if self.gamemode=='man2ran':
-            if (self.round%2==0):
-                action=input()
-            else:
-                action=np.random.randint(1,9)
-        elif self.gamemode=='ran2rand':
-            if (self.round%2==0):
-                action=np.random.randint(1,10)
-                print(action)
-            else:
-                action=np.random.randint(1,10)
-                print(action)
-        elif self.gamemode=='man2man':
-            if (self.round%2==0):
-                action = input()
-            else:
-                action = input()
-
-        self.update(action)
-        if self.checkgame() :#其中一方獲勝
-            os.system("cls")
-            print("{} WIN!!!".format(self.turn))
-            time.sleep(2)
-            self.render()
-            print("\n-------------------------\n")
-            self.reset()
-        elif self.round==9:#和局
-            os.system("cls")
-            print("TOE")
-            time.sleep(2)
-            self.render()
-            print("\n-------------------------\n")
-            self.reset()
-
+    # def main(self):
+    #     self.render()
+    #     print(self.status)
+    #     if self.gamemode=='man2ran':
+    #         if (self.round%2==0):
+    #             action=input()
+    #         else:
+    #             action=np.random.randint(1,9)
+    #     elif self.gamemode=='ran2rand':
+    #         if (self.round%2==0):
+    #             action=np.random.randint(1,10)
+    #             print(action)
+    #         else:
+    #             action=np.random.randint(1,10)
+    #             print(action)
+    #     elif self.gamemode=='man2man':
+    #         if (self.round%2==0):
+    #             action = input()
+    #         else:
+    #             action = input()
+    #
+    #     self.update(action)
+    #     if self.checkgame() :#其中一方獲勝
+    #         os.system("cls")
+    #         print("{} WIN!!!".format(self.turn))
+    #         time.sleep(2)
+    #         self.render()
+    #         print("\n-------------------------\n")
+    #         self.reset()
+    #     elif self.round==9:#和局
+    #         os.system("cls")
+    #         print("TOE")
+    #         time.sleep(2)
+    #         self.render()
+    #         print("\n-------------------------\n")
+    #         self.reset()
 
 
-game = tic_tac_toe(gamemode='man2man')
-while __name__ == '__main__':
-    game.main()
+#
+# game = tic_tac_toe(gamemode='man2man')
+# while __name__ == '__main__':
+#     game.main()
