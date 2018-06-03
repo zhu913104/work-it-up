@@ -18,20 +18,20 @@ class tic_tac_toe(object):
         self.done = False
         return self.status
 
-    def checkgame(self):
+    def checkgame(self,status):
         for i in range(3):
-            if self.status[i] == self.status[i+3] == self.status[i+6] == self.turn:
+            if status[i] == status[i+3] == status[i+6] == self.turn:
                 return True
-            elif self.status[i*3] == self.status[i*3+1] == self.status[i*3+2] == self.turn:
+            elif status[i*3] == status[i*3+1] == status[i*3+2] == self.turn:
                 return True
-        if self.status[0] == self.status[4] == self.status[8] == self.turn or self.status[2] == self.status[4] == self.status[6] == self.turn:
+        if status[0] == status[4] == status[8] == self.turn or status[2] == status[4] == status[6] == self.turn:
             return True
         return False
 
-    def render(self):
+    def render(self,status):
         os.system("cls")
         print("")
-        tran=self.status.copy()
+        tran=status.copy()
         for i in range(len(tran)) :
             if tran[i] == '1':
                 tran[i]= 'O'
@@ -40,31 +40,32 @@ class tic_tac_toe(object):
         for i in range(3):
             print('  ' + tran[i*3] + "|" + tran[i*3+1] + '|' + tran[i*3+2])
 
-    def update(self,action):
+    def update(self,action,status):
         self.turn=self.player[self.round%2]
         action = int(action)
         self.leg=False
+        status_=status.copy()
         r=0
-        if self.status[action] == " ":
-            self.status[action] = self.turn
+        if status_[action] == " ":
+            status_[action] = self.turn
             self.round+=1
             self.leg = True
-            if self.checkgame() and self.turn=="1":
+            if self.checkgame(status_) and self.turn=="1":
                 r=10
                 self.done = True
                 self.leg=False
 
-            elif self.checkgame() and self.turn=="2":
+            elif self.checkgame(status_) and self.turn=="2":
                 r=-10
                 self.done = True
                 self.leg = False
 
-            return self.status ,r,self.done, self.leg
+            return status_ ,r,self.done, self.leg
         else:
-            if  " "not in self.status:
+            if  " "not in status:
                 self.done = True
                 self.leg = True
-            return self.status ,r,self.done, self.leg
+            return status ,r,self.done, self.leg
 
 
 
